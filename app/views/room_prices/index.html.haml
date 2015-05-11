@@ -1,0 +1,19 @@
+%h2= t('activerecord.models.room_price.other')
+
+%p= link_to((t '.generate_price_skeleton'), 'room_prices/generate', :class => 'links')
+
+- @seasons.each do |s|
+  %table.settlements.hotel
+    %tr
+      %th{ :style => 'width:100px' }
+        %b= s.name
+      - @room_types.each do |rt|
+        %th{ :style => 'width:70px' }= rt.name
+    - @guest_types.each do |gt|
+      %tr
+        %td= gt.name.upcase
+        - @room_types.each do |rt|
+          - room_price_object = @current_vendor.room_prices.existing.where(:season_id => s.id, :room_type_id => rt.id, :guest_type_id => gt.id).first
+          - next if room_price_object.nil?
+          - base_price = room_price_object.base_price
+          %td{:class => "#{'highlighted' if base_price.zero?}" }= link_to number_to_currency(base_price), edit_room_price_path(room_price_object)

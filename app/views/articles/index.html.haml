@@ -1,0 +1,57 @@
+%h2= t('activerecord.models.article.other')
+
+= link_to (t :new), new_article_path, :class => 'links'
+= link_to (t '.list_all'), listall_articles_path, :class => 'links'
+= link_to (t '.sort'), sort_index_articles_path, :class => 'links'
+
+= image_tag 'ajax-loader2.gif', :id => 'ajax_progress', :style => 'display: none;'
+
+%table.articles
+  %tr
+    %td#remove{ :colspan => 2 }
+      = text_field_tag 'article_name', t('.search_term'), :onclick => 'this.value = "";', :onkeypress => 'enable_articles_search = true;'
+      %span#article_name_display_keyboard.display_keyboard
+      %ul#search_results
+  %tr
+    - @scopes.each do |scope|
+      %td{ :id => "add_to_#{ scope }" }
+        %script== $('#add_to_#{ scope }').droppable({ hoverClass: 'receiving', tolerance: 'pointer', drop: function(event,ui){ $.ajax({ type: 'POST', url: 'articles/change_scope', data: 'target=#{ scope }&id=' + ui.draggable.attr('model_id') + '&source=' + ui.draggable.attr('source') }) } });
+        %span.scope_title= t "scopes.#{scope}".to_sym
+        = link_to t('.view'), "/articles/#{ scope }", :class => 'scopelink'
+        %div.scope_list{ :id => "#{scope}_list" }= render :partial => 'scope_list', :locals => { :scope => scope }
+
+:javascript
+  var enable_articles_search = false;
+
+  $('#remove').droppable({
+    hoverClass: 'receiving',
+    drop: function(event,ui){
+      if (ui.draggable.attr('source') != 'searchresults') {
+        ui.draggable.remove();
+      }
+      $.ajax({
+        type: 'POST',
+        url: '/articles/change_scope',
+        data: 'target=searchresults&id=' + ui.draggable.attr('model_id') + '&source=' + ui.draggable.attr('source')
+      });
+    }
+  });
+
+  window.setInterval(
+    function() {
+      if (enable_articles_search == true) {
+        enable_articles_search = false;
+        $.ajax({
+          type: 'POST',
+          url: '/articles/find',
+          data: 'articles_search_text=' + $('#article_name').val()
+        });
+      }
+    }
+  , 2000);
+
+  $('#article_name').keyboard( {openOn: '', accepted: function(){ enable_articles_search = true } } );
+  $('#article_name_display_keyboard').click(function(){
+    $('#article_name').val('');
+    $('#article_name').getkeyboard().reveal();
+  });

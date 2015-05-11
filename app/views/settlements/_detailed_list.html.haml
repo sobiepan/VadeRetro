@@ -1,0 +1,50 @@
+%table.detailed_list
+  %tr
+    %th{ :style => 'width:280px' }= Item.model_name.human
+    %th{ :style => 'width:70px' }= t '.count'
+    %th{ :style => 'width:50px' }= t '.unit_price'
+    %th{ :style => 'width:50px' }= t '.total'
+    %th{ :style => 'width:80px; text-align: right;' }= t '.revenue'
+  - total = 0
+  - @orders.each do |so|
+    - total += so.sum
+    %tr
+    %tr
+      %td.order_begin{ :colspan => 6 }
+        = t('.order_number_on_table_on_date', :order => Order.model_name.human, :number => so.nr, :table => so.table.name, :time => l(so.created_at + so.vendor.time_offset.hours, :format => :datetime_iso))
+        %br
+        == #{ User.model_name.human }: #{ so.user.login if so.user }
+        %br
+        == #{ CostCenter.model_name.human }: #{ so.cost_center.name if so.cost_center }
+        %br
+        = link_to t(:invoice), order_path(so)
+
+      - so.items.existing.order(:position_category).each do |item|
+        %tr
+          %td= item.quantity ? "#{ t(:refund) + ' ' if item.refunded }#{ item.quantity.prefix } #{ item.quantity.article.name } #{ item.quantity.postfix } #{ item.comment }" : "#{ t(:refund) + ' ' if item.refunded }#{ item.article.name } #{ item.comment }"
+          %td.number= item.count
+          %td.number= number_to_currency item.price
+          %td.colsum= number_to_currency item.refunded ? 0 : item.count * item.price
+          %td.warning
+            - if (item.max_count > item.count) or item.price_changed
+              %i== #{ t('.warning') }:
+              - if (item.max_count > item.count)
+                = t('.reduced_count', :count => item.count, :maxcount => item.max_count)
+              - if item.price_changed
+                = t('.changed_price', :byuser => @current_vendor.users.find_by_id(item.price_changed_by).login)
+        - item.option_items.each do |o|
+          - next if o.price == 0
+          %tr
+            %td== #{ t(:refund) + ' ' if item.refunded }#{ o.name }
+            %td.number= item.count
+            %td.number= number_to_currency o.price
+            %td.colsum= number_to_currency item.refunded ? 0 : item.count * o.price
+            
+      - so.payment_method_items.existing.each do |pmi|
+        %tr
+          %td== ► #{ pmi.payment_method.name } #{ number_to_currency pmi.amount }
+    %tr
+      %td.subtotal{ :colspan => 6 }= number_to_currency so.sum
+        
+  %tr.total
+    %td.total{ :colspan => 6 }= number_to_currency total

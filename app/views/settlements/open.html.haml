@@ -1,0 +1,3 @@
+%h1= t('activerecord.models.settlement.one')
+- @users.each do |u|
+  = render :partial => 'settlement', :locals => { :u => u }

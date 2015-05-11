@@ -1,0 +1,26 @@
+#login
+  - if mobile?
+    = image_tag "logo-small-#{@branding_codename}.png", :id => 'logo'
+  = form_tag @submit_path do
+    %p
+      = label_tag 'password', (t '.password')
+      = password_field_tag 'password', '', :size => 9, :class => 'qwerty ui-keyboard-input'
+      = hidden_field_tag 'mode', 'user'
+      %span#password_display_keyboard.display_keyboard
+    %p= submit_tag t('.login'), :class => 'submit'
+
+- if workstation?
+  :javascript
+    $('#password').focus();
+    $('#password').keyboard({
+      openOn: '',
+      position: { at: 'center bottom' },
+      accepted: function(){
+        if ( $('.ui-keyboard-input').val() != "" ) {
+          $('#login form').submit();
+        }
+      }
+    });
+    $('#password_display_keyboard').click(function() {
+      $('#password').getkeyboard().reveal();
+    });

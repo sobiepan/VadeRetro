@@ -1,0 +1,21 @@
+%h2= @user.login
+
+%a.iconbutton.back_button{ :href => '/users', :title => t(:go_back) }
+
+%br
+%br     
+
+%h3= t("activerecord.models.user_login.other")
+
+= form_tag user_path(@user), :method => :get, :id => 'statisticform' do
+  .limitby
+    = label 'from', t('settlements.index.start_date'), :class => 'right'
+    = select_date(@from, :prefix => 'from', :order => [:year, :month, :day])
+    %br
+    = label 'to', t('settlements.index.end_date'), :class => 'right'
+    = select_date(@to, :prefix => 'to', :order => [:year, :month, :day])
+    %br
+    %span.button{ :onclick => "$('form#statisticform').submit()"}= t('various.display')
+  
+.clear
+= render :partial => "logins_table", :locals => { :user_logins => @user_logins, :user => @user, :last_login => @user.user_logins.last }

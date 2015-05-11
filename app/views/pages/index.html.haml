@@ -1,0 +1,13 @@
+= javascript_include_tag 'menucard_slideshow.js'
+
+- if @current_user
+  = link_to (t :new), new_page_path, :class => 'links'
+  - @pages.each do |p|
+    = link_to edit_page_path(p) do
+      %span.button=p.id
+    
+= render :partial => 'pages', :locals => {:pages => @pages, :partial_htmls_pages => @partial_htmls_pages}
+    
+:javascript
+  var page_count = #{ @pages.count };
+  var page_ids = #{ @pages_ids.to_s };

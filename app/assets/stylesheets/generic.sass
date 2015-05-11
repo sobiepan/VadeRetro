@@ -1,0 +1,830 @@
+// Copyright (c) 2012 Red (E) Tools Ltd.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+$link_color: white
+$error_text: #C00
+$lightgray: #EEE
+$darkgray: #666
+$middlegray: #444
+$background: #333
+$adminbackground: #222
+$billgastroblue1: #5b7682
+$billgastrogrey1: #243239
+$billgastrogrey2: #7E868A
+$warning: #74101b
+$violet: #80477d
+$orange: #ed8b00
+$pink: #cd0052
+$green: #75b10d
+$blue: #136880
+$blank: #27343b
+
+.color_red
+  :color red
+
+div.area
+  :height 460px
+  
+#drag_and_drop_toggle_view_button
+  :display none
+  :background-color #AFA
+  :margin 20px
+
+.errorExplanation
+  :font-size small
+  :color red
+  :margin-top 30px
+  h2
+    :font-size 110%
+
+div.fieldWithErrors
+  :border 5px solid red
+
+div#flash_notice
+  :color #44FF44
+div#flash_error
+  :color #EE0000
+  
+.floatright
+  :float right
+  
+#queue
+  :display none
+
+span.item_comment
+  :display inline-block
+  :width 38px
+  :height 41px
+  :padding 0px 15px
+  :cursor pointer
+  :text-align center
+  :background-image url(button_mobile_comment.png)
+  :background-position center
+  :background-repeat no-repeat
+
+span.item_scribe
+  :display inline-block
+  :width 38px
+  :height 41px
+  :padding 0px 15px
+  :cursor pointer
+  :text-align center
+  :background-image url(button_mobile_scribe.png)
+  :background-position center
+  :background-repeat no-repeat
+
+span.item_price
+  :display inline-block
+  :width 38px
+  :height 41px
+  :padding 0px 15px
+  :cursor pointer
+  :text-align center
+  :background-image url(button_mobile_price.png)
+  :background-position center
+  :background-repeat no-repeat
+
+td.item_configuration
+  :text-align center
+
+a.iconbutton
+  :width 50px
+  :height 54px
+  :margin 0px 0px 0px -3px
+  :cursor pointer
+  :display inline-block
+  :background-size 100%
+  :-moz-border-radius 5px
+  :-webkit-border-radius 5px
+
+a.last_button
+  :margin-right 0px
+
+a.scrolldown_button
+  //:position absolute
+  //:top 30px
+  //:right 0px
+  :float right
+  :background-image url(button_mobile_scrolldown.png)
+a.customer_button
+  //:position absolute
+  //:top 30px
+  //:right 0px
+  :background-image url(customer.png)
+a.scrollup_button
+  :position absolute
+  :bottom 20px
+  :right 0px
+
+a.scrollup_button
+  :background-image url(button_mobile_scrollup.png)
+  
+a.items_notifications_button
+  :background-color #c4d2d7
+  :background-image url(button_mobile_items_notifications.png)
+  
+  
+a.items_notifications_button,
+a.mobile_last_invoices_button
+  :font-size 200%
+  :font-weight bold
+  :color red
+  :text-align right
+  :text-shadow white 2px 2px 5px
+  :vertical-align top
+
+
+a.cancel_button
+  :background-image url(button_mobile_cancel.png)
+  
+#functions_header_last_invoices,
+#functions_header_order_form,
+#functions_header_invoice_form
+  :display none
+ 
+#functions_header_order_form a,
+#functions_header_last_invoices a,
+#functions_footer a
+  :margin 0px 7px 0px -1px
+  
+#functions_footer a#order_clear_button
+
+a.edit_button
+  :background-image url(button_mobile_edit.png)
+
+a.order_button
+  :background-image url(button_mobile_order.png)
+  
+a.gear_button
+  :background-image url(button_mobile_gear.png)
+
+a.tables_button
+  :background-image url(button_mobile_tables.png)
+  
+a.back_button
+  :background-image url(button_mobile_back.png)
+
+a.tables2_button
+  :background-image url(button_mobile_tables2.png)
+
+a.kitchenlist_button
+  :background-image url(button_mobile_kitchenlist.png)
+
+a.invoice_button
+  :background-image url(button_mobile_invoice.png)
+  
+a.last_invoice_button
+  :background-image url(button_mobile_last-invoice.png)
+  
+a.user_button
+  :background-image url(button_mobile_user.png)
+
+a.last_invoice_hotel_button
+  :background-image url(button_mobile_last-invoice-hotel.png)
+
+a.splitinvoice_button
+  :background-image url(button_mobile_splitinvoice.png)
+
+a.splitinvoice_button
+  :background-image url(button_mobile_splitinvoice.png)
+
+a.clear_button
+  :background-image url(button_mobile_clear.png)
+
+a.refund_button
+  :background-image url(button_mobile_refund.png)
+
+a.print2_button
+  :background-image url(button_mobile_print2.png)
+
+a.reload_button
+  :background-image url(button_mobile_reload.png)
+
+a.print1_button
+  :background-image url(button_mobile_print1.png)
+
+a.print1_button_small
+  :background-image url(button_mobile_print1.png)
+  :background-size 25px 25px
+  :width 25px
+  :height 25px
+  :display inline-block
+
+a.print3_button
+  :background-image url(button_mobile_print3.png)
+
+a.print_chef_button
+  :background-image url(button_mobile_print_chef.png)
+  
+a.print_foods_button
+  :background-image url(button_mobile_print_foods.png)
+
+a.print__button
+  :background-image url(button_mobile_print_tables.png)
+  
+a.print_bar_button
+  :background-image url(button_mobile_print_bar.png)
+
+a.print_tables_button
+  :background-image url(button_mobile_print_tables.png)
+
+a.previous_button
+  :background-image url(button_mobile_previous.png)
+
+a.next_button
+  :background-image url(button_mobile_next.png)
+  
+a.previous_button
+  :background-image url(button_mobile_previous.png)
+
+a.area1_button
+  :background-image url(button_mobile_room1.png)
+
+a.area2_button
+  :background-image url(button_mobile_room2.png)
+
+a.area3_button
+  :background-image url(button_mobile_room3.png)
+
+a.area4_button
+  :background-image url(button_mobile_room4.png)
+
+a.cash_button
+  :background-image url(button_mobile_cash.png)
+
+a.finish_button
+  :background-image url(button_mobile_finish.png)
+  
+a.logout_button
+  :background-image url(button_mobile_fingerprint.png)
+
+a.move-to-table_button
+  :background-image url(button_mobile_move-to-table.png)
+
+a#exit_button.exit_button,
+a.exit_button
+  :background-image url(button_mobile_exit.png)
+
+
+div.invoice
+  :background-color white
+  :width 320px
+  :font-family Monospace
+  :font-size 150%
+  :color #333
+  :padding 20px 10px
+  :margin 10px
+  :letter-spacing -1.5px
+  :-moz-border-radius 2px
+  :-webkit-border-radius 2px
+  :-moz-box-shadow 0px 0px 10px black
+  div.add_payment_method,
+  span.payment_method
+    :cursor pointer
+  input
+    :border none
+    :background-color #DDDDEE
+    :text-align right
+  select
+    :width 70px
+    :height 51px
+    :font-size 130%
+    :width 100%
+  table
+    :width 100%
+    td
+      :vertical-align middle
+      :cursor pointer
+    tr.item
+      a
+        :color #333
+        :text-decoration none
+        :display block
+    td.price
+      :padding 0px 5px
+      :text-align right
+    td.total
+      //:width 70px
+      :text-align right
+    td.count,
+    td.count_split
+      :text-align left
+      :padding 5px 5px
+      :font-weight bold
+      :width 30px
+      :background-color #DDE
+      :text-align center
+      a
+        :display block
+        :color #333
+        :height 25px
+        :padding-top 5px
+        :text-decoration none
+    td.count
+      :color #373
+    td.count_split
+      :color #C33
+    td.count_separate
+      :color #333
+      :width 40px
+    td.grey
+      a
+        :background-color lightgrey
+    td.label
+      :text-align left
+      :height 30px
+      :width 180px
+      a
+        :display block
+        :padding 10px 0px
+        :color #333
+        :text-decoration none
+
+
+div.handle_for_table
+  :width 100%
+  :height 100%
+  :font-size 200%
+  :text-align center
+  :background-color #777
+
+div.table
+  :position absolute
+  :background-color #0D161A
+  :font-size 150%
+  span
+    :position absolute
+    :bottom 0px
+    :left 0px
+    :font-size 40%
+  a
+    :width 30px
+    :height 30px
+    :background-size 30px 30px
+
+div.occupied
+  :color white
+
+select.target_table
+  font-size: 160%
+  margin-left: 6px
+  width: 48px
+
+#functions_footer
+  margin-top: 20px
+
+span.subtotal
+  :font-size 150%
+  :font-weight bold
+  
+span.subtotal.split
+  :color #C33
+
+div#orderform
+  :font-size 110%
+
+span.link
+  :text-decoration underline
+  :color white
+  :cursor pointer
+span.order-customer
+  :margin 5px
+  :padding 4px
+  :font-weight bolder
+  
+table#itemstable
+  td#inputfields
+    :display none
+  td.zero_price
+    :background-color #522
+  td.offline
+    :background-color #757
+  td.unconfirmed
+    :background-color #252
+
+div#note_for_order
+  :display none
+
+form table td
+  :vertical-align top
+
+tr.item td.warning
+  :background-color $warning
+
+tr.item td.updated
+  :background-color $billgastroblue1
+
+div#draw_controls
+  :display none
+  span#submit_drawing
+    :display inline-block
+    :background-color $billgastroblue1
+    :padding 10px
+
+canvas
+  :background-color white
+
+  
+  
+
+tr.payment_method_row
+  input
+    :width 60px
+    :font-size 130%
+  div.delete
+    :display inline-block
+    :margin-left 10px
+  td
+    :padding 0px !important
+  td.payment_method
+    :text-align center
+  td.payment_method_input
+    :width 60px
+
+div#invoices
+  td.payment_method
+    :border 1px solid #DDD
+    :background-color white
+  td.payment_method.selected
+    :border 2px solid black
+    :background-color #DDDDEE
+
+div.booking_form
+  td.payment_method.selected
+    :background-color #3A474D
+
+div.add_payment_method
+  :padding 5px
+  :margin 0px 0px 7px 0px
+  :background-color #DDDDEE
+  :display inline-block
+    
+    
+    
+input#customer_search_input
+  :width 100%
+
+span.textbutton
+  :display inline-block
+  :border-top 2px solid #555
+  :border-left 2px solid #555
+  :border-right 2px solid #222
+  :border-bottom 2px solid #222
+  :background-color #3A474D
+  :cursor pointer
+
+div.booking_form
+  span.textbutton#booking_pay
+    :background-color $pink
+  span.textbutton#booking_cancel
+    :background-color $blank
+  span.textbutton#booking_submit,
+  span.textbutton#booking_interim_invoice,
+    :background-color $green
+    :color white
+  span.textbutton#add_payment_method_button
+    :background-color $blue
+  
+  div.guest_type,
+  div.season
+    :border-top 2px solid #555
+    :border-left 2px solid #555
+    :border-right 2px solid #222
+    :border-bottom 2px solid #222
+  
+  div.guest_type
+    :background-color $billgastroblue1
+  
+  div.season,
+  div#choose_room_container
+    :background-color $billgastrogrey1
+  
+  div.surcharge_col.booking_item_total
+    :font-weight bold !important
+    :width 52px
+    :white-space nowrap
+
+  div.surcharge_col.booking_item_delete
+    :background-image url(button_small_delete.png)
+    :width 23px
+    :cursor pointer
+    
+  div.surcharge_col.booking_item_datelock
+    :cursor pointer
+  
+  div#booking_total
+    :font-size 150%
+
+  div.booking_change
+    :font-size 150%
+    :float right
+    :margin-top 40px
+
+
+// Datepicker
+
+div.ui-datepicker
+  :position absolute
+  :z-index 100
+  
+div#ui-datepicker-div,
+div.ui-datepicker
+  :-moz-box-shadow 0px 0px 8px white
+  :-moz-border-radius 5px
+  :-webkit-box-shadow 0px 0px 8px white
+  :-webkit-border-radius 5px
+  :background-color $billgastroblue1
+  div.ui-datepicker-header
+    :-moz-border-radius 10px
+    :-webkit-border-radius 10px
+    :padding 10px
+    :background-color $billgastrogrey1
+    :font-size 150%
+    a.ui-datepicker-prev
+      :cursor pointer
+      :padding 10px
+      :float left
+    a.ui-datepicker-next
+      :cursor pointer
+      :padding 10px
+      :float right
+  div.ui-datepicker-title
+    :text-align center
+  table.ui-datepicker-calendar
+    :background-color $billgastroblue1
+    :padding 10px
+    td
+      a
+        :text-decoration none
+        :margin 4px
+        :display inline-block
+        :text-align center
+        :width 20px
+        :height 20px
+        :padding 10px
+      a.ui-state-hover,
+      a.ui-state-highlight
+        :background-color $billgastrogrey1
+    td
+      :background-color $billgastrogrey2
+    td.ui-datepicker-unselectable
+      :background-color transparent
+
+div.delete 
+  :background-image url(button_small_delete.png)
+  :width 32px
+  :height 35px
+  :cursor pointer
+  :position absolute
+div.add-button
+  :background-image url(button_small_plus.png)
+  :width 32px
+  :height 35px
+  :cursor pointer
+  :position absolute
+div.button_menu
+  :background-color $billgastrogrey1
+  :border 1px solid $billgastrogrey2
+  :border-bottom none
+  :padding 3px
+  :padding-left 10px
+  :padding-top 5px
+  :border-radius 5px
+  :position absolute
+  :height 40px
+
+.semitransparent
+  :opacity .4
+  
+
+.displaynone
+  :display none
+  
+div.item_list
+  .confirmed,
+  .unconfirmed
+    :background-color #333
+    .reference_count, .update
+      :background-color #3A474D
+    .increment
+      :background-color #74101B
+      
+span.button
+  :background-color white
+  :display inline-block
+  :padding 5px 7px
+  :color black
+  :border 1px solid #666
+  :-webkit-border-radius 3px
+  :-moz-border-radius 3px
+  :cursor pointer
+  :text-transform uppercase
+  :font-size 110%
+  :margin 3px 0px 5px 0px
+  a
+    color: black
+    text-decoration: none
+
+span.button.bg_green
+  :background-color #AFA
+  
+input[type="button"],
+input[type="submit"]
+  :padding 5px 10px
+  :font-size 110%
+  :text-transform uppercase
+  :font-weight bold
+
+div.invoice_item
+  :cursor pointer
+  
+#audio
+  :display none
+  :position absolute
+  :top -200px
+  
+#seasons
+  :color white
+  div.season
+    :font-size 60%
+    :height 30px
+    :position absolute
+    :display inline-block
+    :border-left 1px solid white
+  #nested_seasons
+    :display none
+    :position relative
+    :margin auto
+    :height 30px
+    :width 99%
+    :border 3px solid white
+    //:overflow hidden
+  #spliced_seasons
+    :display none
+    :position relative
+    :margin auto
+    :height 30px
+    :width 99%
+    :border 3px solid white
+    :overflow hidden
+
+    
+// ============== PAGES ============
+
+table.page
+  div.page
+    :position relative
+    :margin 0px
+    
+
+div.page
+  :width 800px
+  :height 480px
+  :background-color white
+  :position absolute
+  :margin 50px 0px 0px 10px
+  :display none
+  :color black
+  :background-repeat no-repeat
+  :background-size 100%
+  :-moz-box-shadow 0px 0px 8px black
+  :-moz-border-radius 10px
+  :-webkit-box-shadow 0px 0px 8px black
+  :-webkit-border-radius 10px
+
+    
+div.partial
+  :position absolute
+  textarea
+    :display none
+    :border none
+    :background-color transparent
+    :position absolute
+    :top 39px
+  div.options
+    :text-align right
+    :left -20px
+    :position absolute
+    :opacity 0.4
+  div.options:hover
+    :opacity 0.8
+  img
+    :-moz-box-shadow 0px 0px 8px black
+    :-moz-border-radius 10px
+    :-webkit-box-shadow 0px 0px 8px black
+    :-webkit-border-radius 10px
+  
+
+
+  
+div.previous_page_button,
+div.next_page_button
+  :float left
+  :height 400px
+  :width 50px
+  :margin 0 10px
+  
+div.previous_page_button a,
+div.next_page_button a
+  :color black
+  :display block
+  :height 400px
+  :width 50px
+  :background-repeat no-repeat
+  :background-position center center
+  
+div.next_page_button a
+  :background-image url('arrow_page_right.png')
+  
+div.previous_page_button a
+  :background-image url('arrow_page_left.png')
+  
+select.presentation_for_partial
+  :display none
+  :position absolute
+  :top 5px
+
+img.asset
+  :width 200px
+  :-moz-box-shadow 0px 0px 8px black
+  :-moz-border-radius 10px
+  :-webkit-box-shadow 0px 0px 8px black
+  :-webkit-border-radius 10px
+  
+  
+#digital_menucard
+  :height 100%
+  :width 100%
+  div.page
+    :position fixed
+    :left 0px
+    :top 0%
+    :height 100%
+    :width 100%
+    :margin 0px
+  
+#digital_menucard,
+.page
+  :position fixed
+  :left 0px
+  :top 0%
+  span.dmc_button
+    :display inline-block
+    :padding 10px
+    :background-color rgba(255, 255, 255, 0.5)
+    :background-position center
+    :background-repeat no-repeat
+    :color black
+    :cursor pointer
+  span.dmc_addcartbutton
+    :width 100px
+    :height 70px
+    :padding 0px
+    :background-image url(addtocart.svg)
+    :background-size 100%
+  #dm_header
+    :position fixed
+    :left 0px
+    :top 0px
+    :width 100%
+    :font-size 200%
+    :text-align center
+    span
+      :display inline-block
+      :padding 10px
+      :background-color rgba(255, 255, 255, 0.5)
+      :color black
+      :cursor pointer
+    span#dmc_forward
+      :position fixed
+      :right 0px
+      :bottom 0px
+    span#dmc_back
+      :position fixed
+      :left 0px
+      :bottom 0px
+    span#dmc_sum
+      :position fixed
+      :left 0px
+      :top 0px
+    span#dmc_detail
+      :position fixed
+      :right 0px
+      :top 0px
+  
+.center
+  :text-align center
+  
+#sku_input
+  :width 80%
+  :font-size 150%
+  :background-color rgba(255, 255, 255, 0.5)
+  :border 1px solid rgba(255, 255, 255, 0.2)
+  :margin 2px 0px
+  :color white
+  

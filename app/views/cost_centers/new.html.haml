@@ -1,0 +1,24 @@
+%h2= @cost_center.new_record? ? (t '.new_cost_center') : (t '.edit_cost_center')
+
+- if @cost_center.errors.any?
+  .errors
+    %h3= t 'activerecord.errors.template.header', :count => @cost_center.errors.size, :model => CostCenter.model_name.human
+    %ul
+      - @cost_center.errors.full_messages.each do |msg|
+        %li= msg
+
+.form_fields
+  = form_for @cost_center do |cost_center_form|
+    = submit_tag( controller.action_name == 'new' ? (t :create) : (t :edit) )
+    .floatright= link_to(t('various.cancel'), cost_centers_path, :class => 'links')
+    .clear
+    %table
+      %tr
+        %td= cost_center_form.label 'name'
+        %td= cost_center_form.text_field :name, :size => '10'
+      %tr
+        %td= cost_center_form.label 'description'
+        %td= cost_center_form.text_field :description, :size => '20'
+      %tr
+        %td= cost_center_form.label 'no_payment_methods'
+        %td= cost_center_form.check_box :no_payment_methods

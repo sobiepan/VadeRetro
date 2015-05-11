@@ -1,0 +1,23 @@
+%h2= t('activerecord.models.option.other')
+
+- if @current_vendor.categories.existing.any?
+  = link_to (t :new), new_option_path, :class => 'links'
+- else
+  = t('.no_categories_defined')
+
+- @categories.each do |c|
+  - if c.options.existing.any?
+    %h3= c.name
+  %ul.sort_options{ :id => "category_#{ c.id }" }
+    - c.options.existing.active.positioned.each do |o|
+      %li{ :id => "option_#{ o.id }" }
+        %span.handle
+        = link_to o.name, edit_option_path(o), :class => "list_item"
+
+- @categories.each do |c|
+  :javascript
+    $("#category_#{ c.id }").sortable({
+      dropOnEmpty: false, handle: '.handle', cursor: 'crosshair', items: 'li', opacity: 0.4, scroll: true, update: function(){
+        $.ajax({ type: 'post', data: $('#category_#{ c.id }').sortable('serialize'), dataType: 'script', url: '/options/sort'})
+      }
+    });

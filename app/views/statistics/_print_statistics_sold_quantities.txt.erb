@@ -1,0 +1,12 @@
+
+
+<%= "\e!\x38" %>
+<%= I18n.t('various.sold_quantities') %>
+
+<%= "\e!\x00" %>
+<% @data.each do |id, data| %>
+<% next if data[:count].zero? %>
+<%= "%s %21.21s %s %7.2f %5i\n" % [data[:tax_letter], data[:full_name], @friendly_unit, data[:sum], data[:count]] %>
+<% end %>
+
+<%= "\xc4" * 42 %>

@@ -1,0 +1,224 @@
+- if @vendor.errors.any?
+  .errors
+    %h3= t 'activerecord.errors.template.header', :count => @vendor.errors.size, :model => Vendor.model_name.human
+    %ul
+      - @vendor.errors.full_messages.each do |msg|
+        %li= msg
+
+
+= form_for nest_image(@vendor), :html => { :multipart => true, :class => 'vendor_form' } do |vendor_form|
+  = submit_tag @vendor.new_record? ? (t :create) : (t :edit)
+  .floatright= link_to(t('various.cancel'), vendors_path, :class => 'links')
+  .clear
+  .image
+    = vendor_form.label :logo
+    %img.asset{ :src => @vendor.image('logo') }
+    = vendor_form.label :invoice_logo
+    %img.asset{ :src => @vendor.image('invoice_logo') }
+  %table
+    %tr
+      %td
+        %br
+        = vendor_form.label :name
+        = vendor_form.text_field :name, :size => 15
+        %span.display_keyboard{ :id => "vendor_name_display_keyboard" }
+        %br
+        = vendor_form.label :identifier
+        = vendor_form.text_field :identifier, :size => 15
+        %br
+        = vendor_form.label :email
+        = vendor_form.text_field :email, :size => 15
+        - if @current_company.mode == 'local' or @current_user.role.weight.zero?
+          %br
+          = vendor_form.label :technician_email
+          = vendor_form.text_field :technician_email, :size => 15
+        %br
+        = vendor_form.fields_for :images do |image_form|
+          %br
+          = vendor_form.label image_form.object.image_type.to_s
+          = image_form.file_field :file_data
+          = image_form.hidden_field :image_type
+          
+        - if permit 'receipt_logo'
+          %br
+          = vendor_form.label :rlogo_header
+          = vendor_form.file_field :rlogo_header
+          %br
+          = vendor_form.label :rlogo_footer
+          = vendor_form.file_field :rlogo_footer
+          %br
+        - if @current_user.role.weight == 0
+          %br
+          = vendor_form.label :country
+          %select{ :name => 'vendor[country]' }
+            - SalorHospitality::Application::COUNTRIES.each do |key, val|
+              %option{ :value => key, :selected => vendor_form.object.country == key }= t val
+          %br
+          = vendor_form.label :time_offset
+          = vendor_form.text_field :time_offset, :size => 2
+          %span.display_keyboard{ :id => "vendor_time_offset_display_keyboard" }
+          %br
+          = vendor_form.label :ticket_space_top
+          = vendor_form.text_field :ticket_space_top, :size => 2
+          %br
+          - if @current_company.mode == 'local'
+            = vendor_form.label :update_tables_interval
+            = vendor_form.text_field :update_tables_interval, :size => 2
+            %span.display_keyboard{ :id => "vendor_update_tables_interval_display_keyboard" }
+            %br
+            = vendor_form.label :update_item_lists_interval
+            = vendor_form.text_field :update_item_lists_interval, :size => 2
+            %span.display_keyboard{ :id => "vendor_update_item_lists_interval_display_keyboard" }
+            %br
+            = vendor_form.label :update_resources_interval
+            = vendor_form.text_field :update_resources_interval, :size => 2
+            %span.display_keyboard{ :id => "vendor_update_resources_interval_display_keyboard" }
+            %br
+          - else
+            = vendor_form.label :automatic_printing_interval
+            = vendor_form.text_field :automatic_printing_interval, :size => 2
+            %span.display_keyboard{ :id => "vendor_automatic_printing_interval_display_keyboard" }
+        %br
+        = vendor_form.label :receipt_header_blurb
+        = vendor_form.text_area :receipt_header_blurb
+        %span.display_keyboard{ :id => "vendor_receipt_header_blurb_display_keyboard" }
+        %br
+        = vendor_form.label :receipt_footer_blurb
+        = vendor_form.text_area :receipt_footer_blurb
+        %span.display_keyboard{ :id => "vendor_receipt_footer_blurb_display_keyboard" }
+        %br
+        = vendor_form.label :invoice_header_blurb
+        = vendor_form.text_area :invoice_header_blurb
+        %span.display_keyboard{ :id => "vendor_invoice_header_blurb_display_keyboard" }
+        %br
+        = vendor_form.label :invoice_footer_blurb
+        = vendor_form.text_area :invoice_footer_blurb
+        %span.display_keyboard{ :id => "vendor_invoice_footer_blurb_display_keyboard" }
+
+      %td
+        - if @current_company.mode == 'local' or @current_user.role.weight.zero?
+          = vendor_form.check_box :enable_technician_emails
+          = vendor_form.label :enable_technician_emails, :style => "width: 350px"
+          %br
+        = vendor_form.check_box :use_order_numbers
+        = vendor_form.label :use_order_numbers, :style => "width: 350px"
+        %br
+        = vendor_form.check_box :ticket_wide_font
+        = vendor_form.label :ticket_wide_font, :style => "width: 350px"
+        %br
+        = vendor_form.check_box :ticket_tall_font
+        = vendor_form.label :ticket_tall_font, :style => "width: 350px"
+        %br
+        = vendor_form.check_box :ticket_item_separator
+        = vendor_form.label :ticket_item_separator, :style => "width: 350px"
+        %br
+        = vendor_form.check_box :ticket_display_time_order
+        = vendor_form.label :ticket_display_time_order, :style => "width: 350px"
+        %br
+        = vendor_form.check_box :history_print
+        = vendor_form.label :history_print, :style => "width: 350px"
+        - if @current_user.role.weight == 0
+          %br
+          = vendor_form.check_box :remote_orders
+          = vendor_form.label :remote_orders
+
+        %div#vendor_printers
+          %br
+          %br
+          %h3= t('activerecord.models.vendor_printer.other')
+          %hr
+          %p= t('.print_via_salorbin_explanation')
+          %p
+            Printing / URL:
+            %br
+            - if @current_company.mode == 'saas'
+              %input{ :disabled => true, :value => "#{ @current_company.full_url }/printers", :size => 35 }
+            - else
+              - match = /(.*\/\/.*?\/).*/.match(request.url)
+              - url = match[1] if match
+              %input{ :disabled => true, :value => "#{ url }printers", :size => 35 }
+          %p
+            Printing / Username:
+            %br
+            %input{ :disabled => true, :value => vendor_form.object.hash_id, :size => 35 }
+          %hr
+          %span.button#identify_printers= t '.identify_printers'
+          %br
+          %span.button#test_printers= t '.test_printers'
+          %br
+          %span.button#test_printers_chartest= t '.test_printers_chartest'
+          %hr
+          %span#add_printer
+            %span.button= t '.add_printer'
+          %br
+          = vendor_form.fields_for :vendor_printers, vendor_form.object.vendor_printers.existing do |f|
+            = render :partial => 'vendor_printer', :locals => { :f => f }
+          %script== var printer_template = '#{ generate_template(vendor_form, :vendor_printers) }'
+          
+.clear
+
+- if @current_user.role_weight.zero?
+  %small
+    %code= SalorHospitality.tailor #.pretty_inspect.gsub("<", "&lt;").gsub("\n", "<br/>").gsub(" ", "&nbsp;")
+    %br
+    %code old:
+    %br
+    - SalorHospitality.old_tailors.each do |t|
+      %code= t
+      %br
+
+
+- if @current_user.onscreen_keyboard_enabled
+  :javascript
+    $('#vendor_name').keyboard( {openOn: '' } );
+    $('#vendor_name_display_keyboard').click(function(){ $('#vendor_name').getkeyboard().reveal(); });
+    
+    $('#vendor_time_offset').keyboard( {openOn: '', layout:'num' } );
+    $('#vendor_time_offset_display_keyboard').click(function(){ $('#vendor_time_offset').getkeyboard().reveal(); });
+    
+    $('#vendor_update_tables_interval').keyboard( {openOn: '', layout:'num' } );
+    $('#vendor_update_tables_interval_display_keyboard').click(function(){ $('#vendor_update_tables_interval').getkeyboard().reveal(); });
+    
+    $('#vendor_update_item_lists_interval').keyboard( {openOn: '', layout:'num' } );
+    $('#vendor_update_item_lists_interval_display_keyboard').click(function(){ $('#vendor_update_item_lists_interval').getkeyboard().reveal(); });
+    
+    $('#vendor_update_resources_interval').keyboard( {openOn: '', layout:'num' } );
+    $('#vendor_update_resources_interval_display_keyboard').click(function(){ $('#vendor_update_resources_interval').getkeyboard().reveal(); });
+    
+    $('#vendor_automatic_printing_interval').keyboard( {openOn: '', layout:'num' } );
+    $('#vendor_automatic_printing_interval_display_keyboard').click(function(){ $('#vendor_automatic_printing_interval').getkeyboard().reveal(); });
+    
+    $('#vendor_receipt_header_blurb').keyboard( {openOn: '' } );
+    $('#vendor_receipt_header_blurb_display_keyboard').click(function(){ $('#vendor_receipt_header_blurb').getkeyboard().reveal(); });
+    $('#vendor_receipt_footer_blurb').keyboard( {openOn: '' } );
+    $('#vendor_receipt_footer_blurb_display_keyboard').click(function(){ $('#vendor_receipt_footer_blurb').getkeyboard().reveal(); });
+    $('#vendor_invoice_header_blurb').keyboard( {openOn: '' } );
+    $('#vendor_invoice_header_blurb_display_keyboard').click(function(){ $('#vendor_invoice_header_blurb').getkeyboard().reveal(); });
+    $('#vendor_invoice_footer_blurb').keyboard( {openOn: '' } );
+    $('#vendor_invoice_footer_blurb_display_keyboard').click(function(){ $('#vendor_invoice_footer_blurb').getkeyboard().reveal(); });
+    
+:javascript
+  $('#add_printer').click(function(){
+    var new_printer_id = new Date().getTime();
+    $('#vendor_printers').append(printer_template.replace(/NEW_RECORD/g, 'new_' + new_printer_id));
+    $
+  });
+
+  $('#identify_printers').click(function(){
+    $.ajax({
+      url: '/vendors/identify_printers'
+    });
+  });
+  
+  $('#test_printers').click(function(){
+    $.ajax({
+      url: '/vendors/test_printers'
+    });
+  });
+  
+  $('#test_printers_chartest').click(function(){
+    $.ajax({
+      url: '/vendors/test_printers',
+      data: {chartest:true}
+    });
+  });

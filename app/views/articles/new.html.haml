@@ -1,0 +1,149 @@
+%h2= @article.new_record? ? (t '.new_article') : (t '.edit_article')
+
+- if @article.errors.any?
+  .errors
+    %h3= t 'activerecord.errors.template.header', :count => @article.errors.size, :model => Article.model_name.human
+    %ul
+      - @article.errors.full_messages.each do |msg|
+        %li= msg
+
+= form_for nest_image(@article), :html => { :multipart => true } do |article_form|
+  = submit_tag( controller.action_name == 'new' ? (t :create) : (t :edit) )
+  .floatright= link_to(t('various.cancel'), articles_path, :class => 'links')
+  .clear
+  %div.article_new
+    .image{:style=>'text-align: center'}
+      %img.asset{ :src => @article.image }
+    .main_form
+      %div
+        %span= article_form.label 'active'
+        %span.input_fields= article_form.check_box :active
+      %div
+        %span= article_form.label 'name'
+        %span.input_fields
+          = article_form.text_field :name, :onkeypress => 'enable_articles_search = true;'
+          %span#article_name_display_keyboard.display_keyboard
+          %span.spinner
+            = image_tag 'ajax-loader.gif', :id => 'spinner', :style => 'display:none;'
+            
+      %div
+        %span= article_form.label 'SKU'
+        %span.input_fields
+          = article_form.text_field :sku
+          %span#article_sku_display_keyboard.display_keyboard
+          
+      %div
+        %span= article_form.label :taxes
+        %span.input_fields= select_tag 'article[taxes_array][]', options_for_select(@taxes.collect{|t| ["#{t.name} (#{t.percent}%)",t.id]}, @selected_taxes), :multiple => true
+      %div
+        %span= article_form.label 'description'
+        %span.input_fields
+          = article_form.text_field :description
+          %span#article_description_display_keyboard.display_keyboard
+
+      - if not @article.quantities.collect{ |q| q.hidden }.include? false
+        %div
+          %span= article_form.label 'price'
+          %span.input_fields
+            = article_form.text_field( :price, :size => 6 )
+            %span#article_price_display_keyboard.display_keyboard
+
+      %div
+        %span= article_form.label 'category_id'
+        %span.input_fields
+          = article_form.collection_select :category_id, @categories, :id, :name, { :include_blank => true }
+      
+      - if permit('manage_statistic_categories')
+        %div
+          %span= article_form.label 'statistic_category_id'
+          %span.input_fields
+            = article_form.collection_select :statistic_category_id, @statistic_categories, :id, :name, { :include_blank => true }
+    
+      %div
+        = article_form.fields_for :images do |image_form|
+          %div
+            %span= article_form.label :image
+            %span.input_fields
+              = image_form.file_field :file_data
+
+      %div
+        %span
+        %span= link_to image_tag('button_small_delete.png', :title => Article.human_attribute_name(:hidden), :alt => Article.human_attribute_name(:hidden)), article_path(article_form.object), :method => :delete, :confirm => t(:are_you_sure), :class => 'delete' unless article_form.object.new_record?
+
+    .search_results
+      %ul#search_results
+
+
+  %div.add_quantity
+    %span.button#add_quantity= t '.add_quantity'
+
+  %ul#quantities_new
+    - collection = article_form.object.errors.blank? ? article_form.object.quantities.existing.positioned : article_form.object.quantities
+    = article_form.fields_for :quantities, collection do |quantity_form|
+      = render :partial => 'quantity', :locals => { :f => quantity_form } unless quantity_form.object.hidden
+
+  %script== var quantity_template = '#{ generate_template(article_form, :quantities) }'
+
+:javascript
+  var enable_articles_search = false;
+
+  window.setInterval(
+    function() {
+      if (enable_articles_search == true) {
+        enable_articles_search = false;
+        $.ajax({
+          type: 'POST',
+          url: '/articles/find',
+          data: 'articles_search_text=' + $('#article_name').val()
+        });
+      }
+    }
+  , 2000);
+
+  $('#add_quantity').click(function(){
+    var new_quantity_id = new Date().getTime();
+    $('#quantities_new').append(quantity_template.replace(/NEW_RECORD/g, 'new_' + new_quantity_id));
+    $('#quantity_new_' + new_quantity_id).slideDown();
+  });
+
+  $('#quantities_new').sortable({
+    axis: 'y',
+    dropOnEmpty: false,
+    handle: '.handle',
+    cursor: 'crosshair',
+    items: 'li',
+    opacity: 0.4,
+    scroll: true,
+    update: function(){
+      $.ajax({
+        type: 'POST',
+        data: $('#quantities_new').sortable('serialize'),
+        dataType: 'script',
+        url: '/quantities/sort'
+      })
+    }
+  });
+
+- if @current_user.onscreen_keyboard_enabled
+  :javascript
+    $(function(){
+      $('#article_name').keyboard( {openOn: '', accepted: function(){ enable_articles_search = true } } );
+      $('#article_name_display_keyboard').click(function(){
+        $('#article_name').getkeyboard().reveal();
+      });
+
+      $('#article_description').keyboard( {openOn: '' } );
+      $('#article_description_display_keyboard').click(function(){
+        $('#article_description').getkeyboard().reveal();
+      });
+      
+      $('#article_sku').keyboard( {openOn: '' } );
+      $('#article_sku_display_keyboard').click(function(){
+        $('#article_sku').getkeyboard().reveal();
+      });
+
+      $('#article_price').keyboard( {openOn: '', layout: 'num'} );
+      $('#article_price_display_keyboard').click(function(){
+        $('#article_price').getkeyboard().reveal();
+      });
+    })

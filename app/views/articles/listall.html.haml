@@ -1,0 +1,11 @@
+%h2= t '.all_articles'
+
+- @articles.each do |ar|
+  %div.articles_listall
+    %span.name== #{ link_to ar.name, edit_article_path(ar) }
+    %span.price= number_to_currency ar.price if ar.quantities.empty?
+    %br
+    - ar.quantities.each do |qu|
+      %span.name== #{qu.prefix}, #{qu.postfix}
+      %span.price= number_to_currency qu.price
+      %br

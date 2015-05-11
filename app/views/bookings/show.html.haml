@@ -1,0 +1,94 @@
+= form_tag 'by_nr', :id => 'search_by_nr' do
+  = text_field_tag 'nr', t('.search_by_number')
+  %span#nr_display_keyboard.display_keyboard
+
+%div#buttons
+  %a.iconbutton.tables2_button{ :href => '/orders?rooms=1', :title => t('.go_to_bookings_calendar') }
+  - unless @booking.finished
+    %a.iconbutton.edit_button{ :href => "/orders?booking_id=#{@booking.id}", :title => t(:edit) }
+  %a.iconbutton.print2_button{ :onclick => "window.print()", :title => (t 'orders.show.print_business_invoice') }
+  - if @booking.finished
+    %a.iconbutton.previous_button{ :href => booking_path(@previous_booking), :title => (t 'orders.show.previous_invoice') }
+    %a.iconbutton.next_button{ :href => booking_path(@next_booking), :title => (t 'orders.show.next_invoice') }
+  
+
+.paper_invoice
+  .vendor_details
+    = image_tag @current_vendor.image 'invoice_logo'
+    .clear
+    = raw Kramdown::Document.new(@booking.vendor.invoice_header_blurb).to_html if @booking.vendor.invoice_header_blurb
+  .customer_details
+    - if @booking.customer
+      = @booking.customer.company_name
+      %br
+      == #{ @booking.customer.first_name } #{ @booking.customer.last_name}
+      %br
+      = @booking.customer.address
+      %br
+      == #{ @booking.customer.postalcode } #{ @booking.customer.city }
+  .clear
+
+  - if @booking.finished
+    %h1== #{ t('various.invoice') } #B#{ @booking.nr }
+  - else
+    %h1== #{ t('various.interim_invoice') }
+  
+  
+  = render :partial => 'invoice_item_list', :locals => { :booking => @booking }
+
+  - if @booking.orders.existing.any?
+    %h3= t 'activerecord.models.order.other'
+    %table.small
+      %tr
+        %th
+        %th= Tax.model_name.human
+        %th= Item.model_name.human
+        %th= t '.unit_price'
+        %th= t '.count'
+        %th= t '.sum'
+      - @booking.orders.existing.each do |order|
+        - order.items.existing.positioned.each do |item|
+          %tr
+            %td.left.narrow== ##{ order.nr }
+            %td.left.narrow= item.taxes.collect{ |k,v| v[:l] }.join(',')
+            %td.left= item.quantity_id ? "#{ t(:refund) + ' ' if item.refunded }#{ item.quantity.prefix } #{ item.quantity.article.name } #{ item.quantity.postfix } #{ item.comment }" : "#{ t(:refund) + ' ' if item.refunded }#{ item.article.name } #{ item.comment }"
+            %td.right= number_to_currency item.price
+            %td.right= item.count
+            %td.right= number_to_currency item.refunded ? 0 : item.count * item.price
+
+          - item.option_items.each do |o|
+            - next if o.price == 0
+            %tr
+              %td.left.narrow== ##{ order.nr }
+              %td.left.narrow= item.taxes.collect{ |k,v| v[:l] }.join(',') # options are just an item price modification, so they have the same taxes
+              %td.left== #{ t(:refund) + ' ' if item.refunded }#{ o.name }
+              %td.right= number_to_currency o.price
+              %td.right= item.count
+              %td.right= number_to_currency item.refunded ? 0 : o.count * o.price
+    
+  %h2.floatright= number_to_currency @booking.sum
+  
+  = render :partial => '/shared/invoice_tax_list', :locals => { :model => @booking }
+
+  %p= PaymentMethodItem.model_name.human
+
+  %table.payment_methods
+    %tr
+      %th.left= PaymentMethodItem.model_name.human
+      %th.right= PaymentMethodItem.human_attribute_name :amount
+    - @booking.payment_method_items.each do |pm|
+      %tr
+        %td.left= pm.payment_method.name
+        %td.right= number_to_currency pm.amount
+
+  .invoice_footer= raw Kramdown::Document.new(@booking.vendor.invoice_footer_blurb).to_html if @booking.vendor.invoice_footer_blurb
+
+:javascript
+  $('#nr').keyboard( {openOn: '', layout:'num', accepted: function(){ $('form#search_by_nr').submit(); } } );
+  $('#nr_display_keyboard').click(function(){
+    $('#nr').val('');
+    $('#nr').getkeyboard().reveal();
+  });
+  $('#nr').click(function(){
+    $('#nr').val('');
+  });

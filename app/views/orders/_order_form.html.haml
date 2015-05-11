@@ -1,0 +1,40 @@
+%h3
+  - if permit('order_notes')
+    %span#order_info{ :onclick => '$("#note_for_order").slideDown()'}= t :just_order
+  - else
+    %span#order_info= t :just_order
+
+#note_for_order= render 'note'
+
+- unless @current_customer
+  #tablesselect
+    %h3= t :move_order_to_table
+    %span.done{ :onclick => "close_table_div();" }
+    #tablesselect_container
+
+- if workstation? and not @current_customer
+  #usersselect
+    %h3= t('roles.new.assign_order_to_user')
+    %span.done{ :onclick => "$('#usersselect').slideUp();" }
+    - @users.each do |u|
+      %span.option{ :onclick => "submit_json.model.user_id = #{ u.id}; $('#usersselect').slideUp();" }== #{ u.login }
+
+#categories
+  - @categories.existing.active.positioned.each do |category|
+    .category{ :id => "category_#{ category.id }", :class => category.name.delete(' '), :style => "background-color: #{category.color}; background-image: url('#{category.icon_path}')", :onclick => "category_onmousedown(#{ category.id }, this)" }
+      %div{ :class => "category_label" }
+        %span= category.name
+
+#articles
+
+#items
+  %span{ :style => "vertical-align: middle" } SKU
+  %input#sku_input
+  .ordersum_container
+    %span== #{ t '.sum' } #{ t 'number.currency.format.unit', :locale => @region }
+    %span#order_sum
+  
+  %table#itemstable
+
+%h3
+  %span#order_info_bottom

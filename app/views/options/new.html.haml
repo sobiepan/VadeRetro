@@ -1,0 +1,68 @@
+%h2= @option.new_record? ? (t '.new_option') : (t '.edit_option')
+
+- if @option.errors.any?
+  .errors
+    %h3= t 'activerecord.errors.template.header', :count => @option.errors.size, :model => Option.model_name.human
+    %ul
+      - @option.errors.full_messages.each do |msg|
+        %li= msg
+
+.form_fields
+  = form_for nest_image(@option), :html => { :multipart => true } do |option_form|
+    = submit_tag( controller.action_name == 'new' ? (t :create) : (t :edit) )
+    .floatright= link_to(t('various.cancel'), options_path, :class => 'links')
+    .clear
+    - if option_form.object.image
+      %div.image
+        %img.asset{ :src => @option.image }
+    %table
+      %tr
+        %td{ :style => 'width: 100px' }
+          %p
+            = option_form.label :name
+            = option_form.text_field :name, :size => '10'
+            %span#option_name_display_keyboard.display_keyboard
+
+          %p
+            = option_form.label :price
+            = option_form.text_field :price, :size => '5'
+            %span#option_price_display_keyboard.display_keyboard
+
+          %p
+            = option_form.fields_for :images do |image_form|
+              = option_form.label :image
+              %br
+              = image_form.file_field :file_data, :size => '5'
+
+          - unless @option.new_record?
+            %p= link_to image_tag('button_small_delete.png', :title => Option.human_attribute_name(:hidden), :alt => Option.human_attribute_name(:hidden), :style => "vertical-align:bottom;padding-top:5px;"), "/options/#{option_form.object.id}", :method => :delete, :confirm => t(:are_you_sure)
+
+        %td
+          %input{ :id => "select_all_options", :type => 'checkbox', :onchange => "toggle_all_option_checkboxes(this)"  }
+          %label.medium{ :for => "select_all_options" }= t '.select_all'
+          %br
+
+          - @categories.each do |c|
+            %input.category_checkbox{ :id => "category_#{ c.id }", :type => 'checkbox', :name => 'option[set_categories][]', :value => c.id, :checked => option_form.object.categories.include?(c) }
+            %label.medium{ :for => "category_#{ c.id }" }= c.name
+            %br
+
+        %td
+          = option_form.check_box :separate_ticket
+          = option_form.label :separate_ticket, :class => 'wide'
+          %br
+
+          = option_form.check_box :no_ticket
+          = option_form.label :no_ticket, :class => 'wide'
+
+:javascript
+  $('#option_name').keyboard( {openOn: '' } );
+  $('#option_name_display_keyboard').click(function(){
+    $('#option_name').getkeyboard().reveal();
+  });
+
+  $('#option_price').keyboard( {openOn: '', layout: 'num'} );
+  $('#option_price_display_keyboard').click(function(){
+    $('#option_price').getkeyboard().reveal();
+  });
+

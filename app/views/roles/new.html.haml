@@ -1,0 +1,37 @@
+%h2= @role.new_record? ? (t '.new_role') : (t '.edit_role')
+
+- if @role.errors.any?
+  .errors
+    %h3= t 'activerecord.errors.template.header', :count => @role.errors.size, :model => Role.model_name.human
+    %ul
+      - @role.errors.full_messages.each do |msg|
+        %li= msg
+
+= form_for @role do |role_form|
+  %p= submit_tag( controller.action_name == 'new' ? (t :create) : (t :edit) )
+  = role_form.label :name, :style => "width: 70px"
+  = role_form.text_field :name, :size => '20'
+  %span#role_name_display_keyboard.display_keyboard
+  %br
+  = role_form.label :weight, :style => "width: 70px"
+  = role_form.text_field :weight, :size => '5'
+  %span#role_weight_display_keyboard.display_keyboard
+  %br
+  %br
+  %h3= t '.permissions'
+  %br
+  - SalorHospitality::Application::PERMISSIONS.each do |p|
+    %input{ :id => "permissions_#{p}", :type => 'checkbox', :name => 'role[permissions][]', :value => p, :checked => role_form.object.permissions.include?(p) }
+    %label{ :for => "permissions_#{p}" }= t ".#{p}"
+    %br
+
+:javascript
+  $('#role_name').keyboard( {openOn: '' } );
+  $('#role_name_display_keyboard').click(function(){
+    $('#role_name').getkeyboard().reveal();
+  });
+  
+  $('#role_weight').keyboard( {openOn: '', layout: 'num' } );
+  $('#role_weight_display_keyboard').click(function(){
+    $('#role_weight').getkeyboard().reveal();
+  });

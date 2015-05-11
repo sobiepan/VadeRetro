@@ -1,0 +1,70 @@
+%h2= @customer.new_record? ? (t '.new_customer') : (t '.edit_customer')
+
+- if @customer.errors.any?
+  .errors
+    %h3= t 'activerecord.errors.template.header', :count => @customer.errors.size, :model => Customer.model_name.human
+    %ul
+      - @customer.errors.full_messages.each do |msg|
+        %li= msg
+
+= form_for @customer do |f|
+  = submit_tag( controller.action_name == 'new' ? (t :create) : (t :edit) )
+  .floatright= link_to(t('various.cancel'), customers_path, :class => 'links')
+  .clear
+  %br
+  = f.label :email
+  = f.text_field :email
+  %br
+  = f.label :password
+  = f.text_field :password
+  %br
+  = f.label :default_table_id
+  = f.select :default_table_id, [['','']] + @tables.collect{|t| [t.name,t.id]}
+  %br
+  = f.label :language
+  = f.select :language, SalorHospitality::Application::LANGUAGES.invert.to_a
+  %br
+  = f.label :first_name
+  = f.text_field :first_name
+  %br
+  = f.label :last_name
+  = f.text_field :last_name
+  %br
+  = f.label :company_name
+  = f.text_field :company_name
+  %br
+  = f.label :address
+  = f.text_field :address
+  %br
+  = f.label :city
+  = f.text_field :city
+  %br
+  = f.label :state
+  = f.text_field :state
+  %br
+  = f.label :country
+  = f.text_field :country
+  %br
+  = f.label :postalcode
+  = f.text_field :postalcode
+  %br
+  = f.label :m_number
+  = f.text_field :m_number
+  %br
+  = f.label :telephone
+  = f.text_field :telephone
+  %br
+  = f.label :cellphone
+  = f.text_field :cellphone
+  %br
+  = f.label :tax_info
+  = f.text_field :tax_info
+
+:javascript
+  $(function() {
+    if ($('#customer_password').val().length == 0)
+      $('#customer_password').val(generate_password(8));
+      
+      if ($('#customer_email').val().length == 0)
+      $('#customer_email').val(generate_password(8));
+  });

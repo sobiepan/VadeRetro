@@ -1,0 +1,455 @@
+$link_color: white
+$error_text: #C00
+$lightgray: #EEE
+$darkgray: #666
+$middlegray: #444
+$background: #333
+$adminbackground: #222
+$billgastroblue1: #5b7682
+$billgastrogrey1: #243239
+$billgastrogrey2: #7E868A
+$warning: #74101b
+
+body
+  :margin 0px 0px 40px 0
+  :padding 0px
+  :font-family Ubuntu-R
+  :color #CCC
+  :background-color #0e1d25
+
+div#flash
+  :position absolute
+  :left 10px
+  :top 10px
+  :font-size 130%
+
+td table
+  :margin-left 20px
+
+div#main
+  :position relative
+
+div#header, h2, #rooms_container
+  :display none
+
+h3
+  :margin 0px
+  
+h2.current_user
+  :display none
+
+div.price_for_item,
+div.comment_for_item
+  :display none
+
+
+// table ------------
+
+div.table
+  :border 1px solid gray
+  :padding 0px
+  :margin 0px
+  :text-align center
+  :-moz-border-radius 6px
+  :-webkit-border-radius 6px
+  :cursor pointer
+
+div.occupied
+  :-moz-box-shadow 0px 0px 8px #35586a
+  :-webkit-box-shadow 0px 0px 8px #35586a
+  
+div.vacant
+  :background-color #0d161a
+  
+div.vacant:hover
+  :background-color #192932
+
+
+
+
+a.links
+  :display inline-block
+  :margin-left 1px
+  :margin-bottom 5px
+  :background-color white
+  :-moz-border-radius 3px
+  :-webkit-border-radius 3px
+  :color black
+  :text-decoration none
+  :text-transform uppercase
+  :font-size 70%
+  :padding 4px
+  :border 1px solid #666
+
+a.logout
+  :width 295px
+  :height 50px
+  :font-size 150%
+
+div#login
+  :font-size 150%
+  :margin auto
+  :width 300px
+  :margin-top 20px
+  label
+    :display inline-block
+    :margin-bottom -10px
+    :font-weight bold
+    :width 110px
+  select
+    :width 180px
+    :height 50px
+    :font-size 120%
+  input
+    :width 150px
+    :height 30px
+    :font-size 120%
+  input.submit
+    :margin-left 120px
+    :width 180px
+    :height 40px
+
+img#logo
+  :margin 20px 0 0 20px
+
+a#toggle_admin_interface
+  :display none
+
+select#order_user_id
+  :display none
+
+div.invoice
+  :display inline-block
+  :width 290px
+  :font-size 120%
+  :padding 10px 5px
+  select
+    :top -17px
+
+td.split
+  :width 30px
+
+div#copyright
+  :display none
+
+select.target_table
+  float: right
+  margin-right: 6px
+  height: 53px
+  width: 70px
+
+
+
+
+
+
+$buttoncolor: #27343b
+$itembgcolor: #556
+$articlelistbgcolor: #3a474d
+
+div.category
+  :width 75px
+  :height 75px
+  :float left
+  :background-repeat no-repeat
+  :background-position center center
+  :overflow hidden
+
+table#itemstable
+  :border-spacing 0px
+  :max-width 500px
+  
+div.optionsselect
+  :margin-top -200px
+  
+div#tablesselect
+  :margin-top -90px
+  
+div#rescuetablesselect
+  :margin-top 60px
+  
+div.optionsselect,
+div#tablesselect,
+div#rescuetablesselect
+  :width 95%
+  :display none
+  :z-index 100
+  :background-color rgba(0, 0, 0, 0.8)
+  :position absolute
+  :right 0px
+  :font-size 25px
+  :padding 5px 10px 10px 10px
+  :-moz-border-radius 5px
+  :-webkit-border-radius 5px
+  :border 1px solid #777
+  :text-align left
+  span.option
+    :cursor pointer
+    :white-space nowrap
+    :display inline-block
+    :background-color black
+    :-moz-border-radius 5px
+    :-webkit-border-radius 5px
+    :border 1px solid #777
+    :padding 4px 10px
+    :margin 5px 0px
+    :vertical-align middle
+  span.done,
+  span.finish
+    :cursor pointer
+    :vertical-align middle
+    :display inline-block
+    :position absolute
+    :right 5px
+    :top 5px
+    :background-image url(button_mobile_cancel-small.png)
+    :width 38px
+    :height 38px
+    :background-repeat no-repeat
+    :background-position center center
+  span.finish
+    :background-image url(button_mobile_finish-small.png)
+  p
+    :margin 0px
+
+div.category,
+div.article,
+div.quantity,
+td.item_count,
+td.item_minus,
+td.item_configuration,
+td.item_options,
+td.item_label
+  :border-top 2px solid #555
+  :border-left 2px solid #555
+  :border-right 2px solid #222
+  :border-bottom 2px solid #222
+  :background-color #3a474d
+
+div.category_label
+  :width 65px
+  :height 65px
+  :font-size 12px
+  :font-weight bold
+  :text-transform uppercase
+  :position relative
+  span
+    :position absolute
+    :top 61px
+    :left 2px
+
+div#articles
+  :clear both
+  :max-width 500px
+
+div.article,
+div.quantity
+  :background-color $buttoncolor
+  :padding 10px 10px
+
+div.quantity
+  :background-color #37444b
+  :padding-left 30px
+  :margin-left 30px
+
+
+div.ordersum_container
+  :font-size 200%
+  :color #CCC
+  :text-align right
+
+input#order_sum
+  :background-color transparent
+  :border 0px
+  :font-size 100%
+  :width 120px
+  :color #CCC
+
+
+
+table#itemstable
+  :width 100%
+  td
+    :padding 4px 1px
+
+td.item_count
+  :cursor pointer
+  :width 15%
+  :text-align center
+  :font-size 150%
+  :font-weight bold
+
+td.item_label
+  :cursor pointer
+  :background-color $articlelistbgcolor
+  :min-height 40%
+  :font-size 85%
+  :padding 0px
+
+td.item_minus
+  :width 15%
+  :cursor pointer
+  :text-align center
+  :background-image url(button_mobile_minus.png)
+  :background-position center
+  :background-repeat no-repeat
+
+td.item_options
+  :width 17%
+  :text-align center
+  a
+    :background-image url(button_mobile_check.png)
+    :background-repeat no-repeat
+    :display block
+    :height 38px
+    :width 41px
+  select
+    :opacity .6
+    :background-color black
+    :border 0px
+    :position relative
+    :left -245px
+    :width 295px
+    :z-index 10
+    option
+      :color white
+      :font-size 200%
+
+  
+
+div#area1_button
+  :background-image url(button_mobile_room1.png)
+
+div#area2_button
+  :background-image url(button_mobile_room2.png)
+
+div#area3_button
+  :background-image url(button_mobile_room3.png)
+
+div#area4_button
+  :background-image url(button_mobile_room4.png)
+
+a
+  :text-decoration none
+
+div.vacant a
+  :color #AAA
+
+div.occupied a
+  :color white
+
+img.more
+  :float right
+  :margin-top 4px
+
+#order_info,
+#order_info_bottom
+  :font-size 80%
+  :margin-left 5px
+
+select#target_table
+  :width 80px
+  :height 52px
+  :font-size 150%
+  :position relative
+  :top 54px
+  :left 199px
+  
+div#quick_order
+  :clear both
+
+div#flash_notice
+  :display none
+
+a.scrollup_button
+  :bottom -70px
+
+div.unsettled_orders
+  :margin 10px
+  :border 1px solid gray
+  :padding 10px
+  :background-color #243239
+  :padding 10px
+  :-moz-border-radius 5px
+  :-webkit-border-radius 5px
+  input
+    :width 180px
+    :font-size 150%
+  input.submitbutton
+    :margin-left 84px
+  label
+    :width 80px
+    :display inline-block
+  a.make_settlement
+    :text-decoration underline
+  p
+    :margin 3px 0px
+  p.username
+    :text-transform uppercase
+    :font-weight bold
+  p.orders
+    :font-weight bold
+    :margin-left 84px
+  p.revenue
+    :font-size 180%
+    :font-weight bold
+    :margin-left 84px
+
+a.clear_button
+  :margin-top 0px
+
+div#items_notifications_static
+  :display none
+  
+div#items_notifications_interactive
+  :vertical-align top
+  #list_interactive_preparation,
+  #list_interactive_delivery,
+  #list_static_preparation,
+  #list_static_delivery
+    :display inline-block
+    :vertical-align top
+  div.item_list
+    :width 310px
+    :vertical-align top
+    :display inline-block
+    .unconfirmed
+      :cursor pointer
+    .confirmed,
+    .unconfirmed
+      :vertical-align top
+      :border 1px solid #777
+      :margin 5px
+      :min-height 30px
+      :-moz-border-radius 5px
+      :-webkit-border-radius 5px
+      :padding 3px
+      .increment, .reference_count, .update
+        :cursor pointer
+        :text-align center
+        :font-size 150%
+        :border-top 2px solid #555
+        :border-left 2px solid #555
+        :border-right 2px solid #222
+        :border-bottom 2px solid #222
+      .increment, .reference_count
+        :width 30px
+      .update
+        :font-size 95%
+        :text-align left
+
+input#customer_search_input
+  :width 90%
+  :font-size 150%
+  :border none
+  
+#functions_header_last_invoices
+  input
+    :float right
+    
+#digital_menucard
+  #dm_header
+    :height 15%
+    :font-size 100%
+    span
+      :padding 10px

@@ -1,0 +1,18 @@
+- if permit('manage_business_invoice') and not mobile_special?
+  %a.iconbutton.last_invoice_button{ :href => "/orders/last", :title => t('.show_last_order'), :style => branding_override_style(:buttons, :last_invoice) }
+- if permit('manage_hotel')
+  %a.iconbutton.last_invoice_hotel_button{ :href => "/bookings/last", :title => t('.show_last_booking') }
+
+- if mobile_special?
+  = link_to '', '/orders/last_invoices', :remote => true, :class => 'iconbutton invoice_button'
+
+- if permit('see_item_notifications_user_delivery') or permit('see_item_notifications_user_preparation') or permit('see_item_notifications_vendor_delivery') or permit('see_item_notifications_vendor_preparation')
+  %a.iconbutton.items_notifications_button{ :onclick => 'display_items_notifications()', :title => t('.items_notifications') }
+
+- if permit('move_tables')
+  %a.iconbutton.tables2_button{ :onclick => "toggle_drag_tables();", :title => t('.toggle_drag_tables') }
+
+%a.iconbutton.logout_button{ :onclick => "logout()" }
+
+- if permit('allow_exit')
+  %a#exit_button.iconbutton.exit_button{ :onclick => "window.open('', '_self', ''); window.close();", :title => t('.exit') }

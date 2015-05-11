@@ -1,0 +1,7 @@
+<% if @source %>
+  $('#<%= @source %>_list').html('<%= escape_javascript render :partial => 'scope_list', :locals => { :scope => @source } %>');
+<% end %>
+
+<% if @target %>
+$('#<%= @target %>_list').html('<%= escape_javascript render :partial => 'scope_list', :locals => { :scope => @target } %>');
+<% end %>

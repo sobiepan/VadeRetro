@@ -1,0 +1,10 @@
+SalorHospitality <%= SalorHospitality::Application::VERSION %>
+
+<% user = User.find_by_id(@request.session[:user_id]) %>
+<% vendor = Vendor.find_by_id(@request.session[:vendor_id]) %>
+
+Company: <%= user.company.name if user %>
+
+Vendor: <%= vendor.name if vendor %>
+
+User: <%= user.login if user %>

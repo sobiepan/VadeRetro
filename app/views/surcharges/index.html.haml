@@ -1,0 +1,24 @@
+%h2= t('activerecord.models.surcharge.other')
+
+%p= link_to((t :new), new_surcharge_path, :class => 'links')
+
+- @seasons.each do |s|
+  %table.settlements.hotel
+    %tr
+      %th
+        %b= s.name.upcase
+      - @guest_types.each do |gt|
+        %th
+          = gt ? gt.name : t('surcharges.new.common_surcharge')
+    - @surcharge_names.each do |n|
+      - next unless n
+      %tr
+        %td= n
+        - @guest_types.each do |gt|
+          - gt_id = gt ? gt.id : nil
+          - surcharge_object = @current_vendor.surcharges.existing.where(:season_id => s.id, :guest_type_id => gt_id, :name => n).first
+          - if surcharge_object
+            - amount = surcharge_object.amount
+            %td{:class => "#{'highlighted' if amount.zero?}" }= link_to number_to_currency(amount), edit_surcharge_path(surcharge_object)
+          - else
+            %td -

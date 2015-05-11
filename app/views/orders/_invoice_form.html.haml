@@ -1,0 +1,114 @@
+- oid = invoice_form.id
+- display_tax_colors = @current_vendor.country == 'cc' || @current_vendor.country == 'de'
+- if display_tax_colors
+  - label_onclick_method = 'rotate_tax_item'
+  - linktitle = t('.switch_tax_for_this_item')
+- else
+  - label_onclick_method = ''
+  - linktitle = t('.split_this_item')
+  
+%div.invoice{ :id => "model_#{oid}" }
+  - @current_vendor.vendor_printers.existing.each do |p|
+    %a{:onclick => "update_order_from_invoice_form({id:#{oid},jsaction:'pay_and_print',printer:#{p.id},interim:interim_receipt_enabled}, this);", :class => "iconbutton print_#{ p.print_button_filename }_button", :title => "#{ t('.print_and_finish') } #{ p.name }"}
+
+  - if not invoice_form.finished
+    %a{ :onclick => "update_order_from_invoice_form({id:#{oid},jsaction:'pay_and_no_print',interim:interim_receipt_enabled}, this);", :class => 'iconbutton finish_button', :title => t('.just_finish'), :style => branding_override_style(:buttons, :finish)}
+
+    %a{ :onclick => "route('table', #{invoice_form.table.id}, 'specific_order', {order_id:#{oid}})", :class => 'iconbutton order_button', :title => t(:edit), :onmouseup => 'this.style.border = "2px solid black";' }
+    
+    - if permit('interim_receipt')
+      %a{ :onclick => "toggle_interim_receipt_printing(this)", :class => 'iconbutton invoice_button', :title => t('roles.new.interim_receipt') }
+    
+
+
+    %table
+      %tr
+        - if permit('move_order_from_invoice_form')
+          %td
+            %select{ :onchange => "route('redirect', #{oid}, 'invoice_move', {target_table_id:$(this).val()});", :title => t('.move_order') }
+              %option
+              = options_from_collection_for_select(@tables, :id, :move_name)
+        
+        - if display_tax_colors
+          %td
+            %select{ :onchange => "update_order_from_invoice_form({id:#{oid},jsaction:'mass_assign_tax',tax_id:$(this).val()});", :title => t('.set_tax_for_all') }
+              - if invoice_form.tax.nil?
+                %option
+              = options_from_collection_for_select(@taxes, :id, :name, (invoice_form.tax.id if invoice_form.tax))
+        - if permit('assign_cost_center') and @current_vendor.cost_centers.existing.any?
+          %td
+            %select{ :onchange => "update_order_from_invoice_form({id:#{oid},jsaction:'change_cost_center', cost_center_id:$(this).val()});", :title => t('.set_cost_center') }
+              = options_from_collection_for_select(@cost_centers, :id, :name, (invoice_form.cost_center.id if invoice_form.cost_center))
+        - if permit('assign_order_to_booking')
+          %td
+            %select#order_id{ :onchange => "update_order_from_invoice_form({id:#{oid},jsaction:'assign_to_booking', booking_id:$(this).val()});", :title => t('.set_booking') }
+              %option
+              = options_from_collection_for_select(@bookings, :id, :info_for_order_assignment, (invoice_form.booking.id if invoice_form.booking))
+
+  %h3
+    == #{ t('activerecord.models.order.one')}
+    == ##{invoice_form.nr}, #{ invoice_form.table.name },
+    %span{ :id => "invoice_username_#{ oid }" }== #{ invoice_form.user.login }
+  %p= l invoice_form.created_at, :format => :long
+  %table.invoice
+    - invoice_form.items.existing.order(:position_category).each do |item|
+      - article_label = item.article.name[0..13]
+      - prefix_label = item.quantity.prefix[0..9] if item.quantity and item.quantity.prefix
+      - postfix_label = item.quantity.postfix[0..9] if item.quantity and item.quantity.postfix
+      - if display_tax_colors
+        - tax = @current_vendor.taxes.find_by_id(item.taxes.keys.first)
+        - color = tax.color
+        - letter = tax.letter
+      - count_label = item.count
+      
+      / ----------------- ITEM ROW -----------------------
+      %tr.item{ :id => "order_#{oid}_item_#{item.id}", :style => "background-color: #{ display_tax_colors ? color : ''}" }
+        %td.count{:id => "#{oid}_#{item.id}_count", :onclick => "split_item(#{item.id}, #{oid}, #{item.price + item.options_price}, #{item.item_id ? item.item_id : 'null'}, 1)"}= count_label
+        %td.count_split{:id => "#{oid}_#{item.id}_count_split", :onclick => "split_item(#{item.id}, #{oid}, #{item.price + item.options_price}, #{item.item_id ? item.item_id : 'null'}, -1)"}
+        %td.label{ :id => "item#{item.id}", :onclick => "#{label_onclick_method}(#{item.id},#{oid})"}
+          - if invoice_form.finished
+            == #{ prefix_label } #{ article_label } #{ item.comment }<br>#{ postfix_label }
+          - else
+            - label = item.quantity ? "#{ item.quantity.prefix } #{ item.quantity.article.name } #{ item.quantity.postfix } #{ item.comment }" : "#{ item.article.name } #{ item.comment }"
+            - optionslabel = item.option_items.collect { |o| "<br>#{ o.name }" unless o.price.zero? }.join
+            - optionsprices = item.option_items.collect { |o| "<br>#{ number_with_precision o.price, :precision => 2 }" unless o.price.zero? }.join
+            - label = raw "%20.20s%s" % [label, optionslabel]
+            - if @current_user.role.permissions.include? 'split_item' or display_tax_colors
+              %div.invoice_item{ :title => linktitle, :id => item.id, }= raw(label)
+            - else
+              = raw(label)
+        /%td.price
+        /  = number_with_precision item.price, :precision => 2
+        /  = raw optionsprices
+        %td.total= number_with_precision item.full_price, :precision => 2
+        / --------------------------------------------------------
+
+    %tr
+      %td{ :colspan => '2' }
+        %a{ :onclick => "submit_split_items(#{oid});", :class => 'iconbutton splitinvoice_button', :title => t('.split_invoice')}
+      %td{ :colspan => '2', :style => 'text-align:right'}
+        %span.subtotal{:id => "subtotal_#{ oid }"}= number_to_currency invoice_form.gross
+        %br
+        %span.subtotal.split{:id => "subtotal_split_#{ oid }"}= number_to_currency 0
+    %tr
+      %td{ :colspan => '4', :style => 'text-align:right'}
+        %span.subtotal= t '.change_money'
+        %span.subtotal{:id => "change_#{ oid }" }= number_to_currency 0
+
+  - if @current_user.role.permissions.include?('enter_payment_methods') and (invoice_form.cost_center.nil? or invoice_form.cost_center.no_payment_methods == false)
+    %div.add_payment_method{:onclick => "add_payment_method(#{oid});"}== + #{ t('activerecord.models.payment_method.other')}
+    %div{ :id => "payment_methods_container_#{oid}" }
+      %table
+
+:javascript
+  submit_json.payment_method_items[#{ oid }] = {};
+  submit_json.totals[#{ oid }] = {model:#{ invoice_form.gross }, model_original:#{ invoice_form.gross }, payment_method_items:0 };
+  submit_json.split_items_hash[#{ oid }] = {};
+  if (permissions.enter_payment_methods) {
+    add_payment_method(#{oid}, null, submit_json.totals[#{oid}].model);
+  }
+  
+- if invoice_form.user_id != @current_user.id
+  :javascript
+    $("#invoice_username_#{ oid }").toggle('pulsate', { times:300 }, 900);
+    $("#invoice_username_#{ oid }").css('color', 'red');

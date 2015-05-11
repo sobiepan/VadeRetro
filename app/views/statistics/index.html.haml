@@ -1,0 +1,48 @@
+%h2= t 'various.statistics'
+= form_tag statistics_path, :method => :get, :id => 'statisticform' do
+  = hidden_field_tag 'print'
+  .limitby
+    = label 'statistics_type', t('.query'), :class => 'right'
+    %select{ :id => 'statistics_type', :name => 'statistics_type' }
+      %option
+      = options_for_select(@permitted_statistics_for_select, params[:statistics_type])
+    %br
+    = label 'from', t('settlements.index.start_date'), :class => 'right'
+    = select_date(@from, :prefix => 'from', :order => [:year, :month, :day])
+    %br
+    = label 'to', t('settlements.index.end_date'), :class => 'right'
+    = select_date(@to, :prefix => 'to', :order => [:year, :month, :day])
+    %br
+    - if @cost_centers.any?
+      = label 'cc', CostCenter.model_name.human, :class => 'right'
+      %select{ :name => 'cost_center_id' }
+        %option{ :value => '' }= t ('settlements.index.all')
+        - selected_id = @selected_cost_center ? @selected_cost_center.id.to_s : ''
+        = options_from_collection_for_select(@cost_centers, :id, :name, selected_id)
+    %br
+      = label 'user', User.model_name.human, :class => 'right'
+      %select{ :name => 'user_id' }
+        %option{ :value => '' }= t ('settlements.index.all')
+        - selected_id = @selected_user ? @selected_user.id.to_s : ''
+        = options_from_collection_for_select(@users, :id, :login, selected_id)
+        
+    %hr
+    = image_tag 'ajax-loader2.gif', :id => 'progress', :style => "display: none"
+    %span.button#stat_displaybutton{ :onclick => 'statistics_submit(false)'}= t('various.display')
+    - if @current_vendor.vendor_printers.existing.any?
+      %span.button#stat_printbutton{ :onclick => 'statistics_submit(true)' }= t('various.print')
+
+  - unless params[:statistics_type].nil? or params[:statistics_type].empty?
+    %p
+      %b== #{ t ("activerecord.models.settlement.other") }:
+      = @sids.collect { |sid| Settlement.find_by_id(sid).nr }.join(", ")
+    = render :partial => params[:statistics_type] 
+
+:javascript
+  function statistics_submit(print) {
+    $("#stat_displaybutton").hide();
+    $("#stat_printbutton").hide();
+    $("#progress").show();
+    $("#print").val(print);
+    $("#statisticform").submit();
+  }

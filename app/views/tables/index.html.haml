@@ -1,0 +1,9 @@
+%h2= t('activerecord.models.table.other')
+
+%p
+  = link_to(t(:new), new_table_path, :class => 'links')
+
+#table_index
+  - @tables.each do |ta|
+    = link_to edit_table_path(ta), :class => 'table_links' do
+      %div.table_index= ta.name

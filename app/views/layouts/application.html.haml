@@ -1,0 +1,97 @@
+!!!
+%html
+  %head
+    %meta{ 'http-equiv' => 'Content-Type', :content => 'text/html; charset=utf-8' }
+    - if mobile? or mobile_special?
+      %meta{ 'name' => "viewport", :content => "width=device-width, initial-scale=1, maximum-scale=1.5, user-scalable=1" }
+      %meta{ 'name' => "apple-mobile-web-app-capable", :content => "yes" }
+
+    = render :partial => "layouts/favicons"
+
+    %title= @branding_title
+
+    = csrf_meta_tag
+    = javascript_include_tag 'application'
+    
+    - if workstation?
+      = javascript_include_tag 'application-workstation'
+      = javascript_include_tag 'jquery.modcoder.excolor'
+      = javascript_include_tag 'jquery.checkbox'
+      = javascript_include_tag 'jquery.keyboard'
+      = javascript_include_tag 'jquery.keyboard.config'
+      = javascript_include_tag "jquery.ui.datepicker-#{ I18n.locale }"
+      %script
+        == $.keyboard.defaultOptions.layout = "#{ @locale }";
+      - if permit('manage_hotel')
+        = javascript_include_tag 'booking'
+        = javascript_include_tag 'bookings'
+        = javascript_include_tag 'season'
+        = javascript_include_tag 'report'
+      - if controller.controller_name == 'orders' and (controller.action_name == 'index' or controller.action_name == 'refund')
+        = javascript_include_tag 'orders-documentready'
+        = javascript_include_tag 'orders-workstation'
+        
+    - if mobile?
+      - if controller.controller_name == 'orders' and (controller.action_name == 'index' or controller.action_name == 'refund')
+        = javascript_include_tag 'orders-documentready'
+        = javascript_include_tag 'orders-mobile'
+
+
+    %style= render :file => 'app/views/layouts/_fonts', :formats => [:css], :content_type => 'text/css' 
+    = stylesheet_link_tag 'generic', :media => 'screen'
+    - if mobile?
+      = stylesheet_link_tag('mobile', :media => 'screen')
+    - if workstation?
+      = stylesheet_link_tag 'print', :media => 'print'
+      = stylesheet_link_tag('workstation', :media => 'screen')
+    - if mobile_special?
+      = stylesheet_link_tag('mobile_special', :media => 'screen')
+
+    %script
+      == automatic_printing = #{ (@current_customer.nil? and @current_user.automatic_printing and @current_company.mode != 'local') ? 'true' : 'false' };
+      == vendor_printers = #{ raw @current_vendor.vendor_printers_hash.to_json };
+      == customer = #{ @current_customer ? @current_customer.table.id : 'null'};
+      == sh_debian_siteid = '#{ SalorHospitality::Application::SH_DEBIAN_SITEID }';
+
+  %body
+    - if workstation? and controller.controller_name == 'orders' and @advertising_url
+      #advertising
+        %iframe#adfram{ :src => @advertising_url, :onload => "$('#advertising').hide();" }
+        #adclickcatcher{ :onclick => 'toggle_advertising(false)' }
+    - if controller.controller_name == 'orders' and @pages and @pages.any?
+      #digital_menucard{ :style => 'display: none'}
+        = render :partial => '/pages/pages', :locals => {:pages => @pages, :partial_htmls_pages => @partial_htmls_pages}
+    #screenwait
+    #rooms_container
+    #container
+      #draw_controls
+        %span#submit_drawing{ :onclick => "submit_drawing();" }= t('.submit_scribe')
+      #header
+        = render 'layouts/header'
+        #admin_menu_hint= t('.admin_menu_hint')
+      #flash
+        - if flash[:notice] and flash[:notice].empty? == false
+          #flash_notice= flash[:notice]
+        - if flash[:error] and flash[:error].empty? == false
+          #flash_error= flash[:error]
+      - if permit('see_debug')
+        #messages messages
+      #main= yield
+      #footer
+      #copyright
+        .left
+          = image_tag "logo-tiny-#{@branding_codename}.png", :class => 'logo_tiny'
+          = SalorHospitality::Application::VERSION
+          == | #{Company.model_name.human}: #{ @current_company.name } | #{Vendor.model_name.human}: #{ @current_vendor.name } | #{User.model_name.human}: #{ @current_user.login if @current_user }
+        .right
+          &copy; 2012 Red (E) Tools Ltd. (thebigrede.net)
+          = image_tag 'red-e-tiny.png', :class => 'logo_red_e'
+    %audio#audio{ :src=>"/alert.wav" }
+    = form_tag @sessionpath, :id => 'logoutform', :method => 'delete' do
+      = hidden_field_tag 'logout_error'
+      = hidden_field_tag 'logout_notice'
+      = hidden_field_tag 'logout_type'
+
+:javascript
+  var i18n = #{ get_i18n };
+  var settings = #{ get_settings };
